@@ -1,0 +1,33 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <ul>Seller: {{ listing.seller }}</ul>
+    <ul>Title: {{ listing.title }}</ul>
+    <ul>Current Bid: ${{ listing.current_bid }}</ul>
+    <ul>Description: {{ listing.description }}</ul>
+    {% if listing.seller != bidder %}
+        <form action="{% url 'listing' listing.id %}" method="post">
+            {% csrf_token %}
+            {{ form }}
+        <input type="submit" >
+        </form>
+        <div>{{ message }}</div>
+    {% endif %}
+    {% if listing.seller == bidder %}
+        <form action="{% url 'listing' listing.id %}" method="post">
+            {% csrf_token %}
+            <br>
+            <input type="submit" value="Close Auction">
+        </form>
+    {% endif %}
+    <div>
+        {% if comments != False %}
+        <br>
+        <h2>Comments:</h2>
+        <br>
+            {% for comment in comments %}
+            <li> {{ comment }}</li>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}
