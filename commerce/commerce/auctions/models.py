@@ -9,11 +9,13 @@ class Listing(models.Model):
     title = models.CharField(max_length=69)
     description = models.CharField(max_length=69)
     current_bid = models.IntegerField()
+    category = models.CharField(max_length=69, null=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.id}, {self.seller}: {self.title} is ${self.current_bid}"
 
-class Bid(models.Model):
+class Bid(models.Model):   #should I allow it to inherit
     bidder = models.ForeignKey(User, on_delete=models.CASCADE)
     item = models.ForeignKey(Listing, on_delete=models.CASCADE)
     bid = models.IntegerField()
@@ -29,5 +31,9 @@ class Comment(models.Model):
     def __str__(self):
         return f"{self.commenter}: {self.comment}"
 
+class Watchlist(models.Model):
+    watcher = models.ForeignKey(User, on_delete=models.CASCADE)
+    item = models.ForeignKey(Listing, on_delete=models.CASCADE)
     
-
+    def __str__(self):
+        return f"{self.item}"
