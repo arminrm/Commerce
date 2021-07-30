@@ -10,13 +10,13 @@ from .models import *
 from django import forms
 
 CATEGORIES = [
-    ('TECHNOLOGY', 'Technology'),
-    ('FASHION', 'Fashion'),
-    ('SPORTS', 'Sports'),
-    ('TOYS', 'Toys'),
-    ('BOOKS', 'Books'),
-    ('MUSIC', 'Music'),
-    ('OTHER', 'Other')
+    ('Technology', 'Technology'),
+    ('Fashion', 'Fashion'),
+    ('Sports', 'Sports'),
+    ('Toys', 'Toys'),
+    ('Books', 'Books'),
+    ('Music', 'Music'),
+    ('Other', 'Other')
 ]
 
 class CreateNewListing(forms.Form):

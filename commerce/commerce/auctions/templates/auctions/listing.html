@@ -1,10 +1,29 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <ul>Seller: {{ listing.seller }}</ul>
-    <ul>Title: {{ listing.title }}</ul>
-    <ul>Current Bid: ${{ listing.current_bid }}</ul>
-    <ul>Description: {{ listing.description }}</ul>
+  <div class="card mb-3" style="max-width: 1200px;">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img src="..." class="img-fluid rounded-start" alt="...">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">{{ listing.title }}</h5>
+          <ul class="list-group list-group-flush">
+            <p class="card-text">{{ listing.description }}</p>
+            <li class="list-group-item"><span class="badge bg-primary">Seller:</span> {{ listing.seller }}</li>
+            <li class="list-group-item"><span class="badge bg-info text-dark">Starting Price:</span> To be added</li>
+            <li class="list-group-item"><span class="badge bg-success">Current Bid:</span> ${{ listing.current_bid }}</li>
+          </ul>
+          <div class="card-body">
+            <a href="{% url 'category' listing.category %}" class="card-link">View "{{ listing.category }}" listings</a>
+          </div>
+          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
     {% if listing.active %}
         {% if listing.seller != bidder %}
             <form action="{% url 'listing' listing.id %}" method="post">
