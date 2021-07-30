@@ -1,10 +1,12 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-  <div class="card mb-3" style="max-width: 1200px;">
+  <div class="card mb-3" style="max-width: 540px;">
     <div class="row g-0">
       <div class="col-md-4">
-        <img src="..." class="img-fluid rounded-start" alt="...">
+        {% if listing.img.url %}
+            <img src="{{ listing.img.url }}" class="img-fluid rounded-start">
+        {% endif %}
       </div>
       <div class="col-md-8">
         <div class="card-body">
@@ -12,13 +14,17 @@
           <ul class="list-group list-group-flush">
             <p class="card-text">{{ listing.description }}</p>
             <li class="list-group-item"><span class="badge bg-primary">Seller:</span> {{ listing.seller }}</li>
-            <li class="list-group-item"><span class="badge bg-info text-dark">Starting Price:</span> To be added</li>
-            <li class="list-group-item"><span class="badge bg-success">Current Bid:</span> ${{ listing.current_bid }}</li>
+            <li class="list-group-item"><span class="badge bg-info text-dark">Starting Price:</span> ${{ listing.starting_price }}</li>
+            {% if listing.current_bid != None %}
+                <li class="list-group-item"><span class="badge bg-success">Current Bid:</span> ${{ listing.current_bid }}</li>
+            {% else %}
+                <li class="list-group-item"><span class="badge bg-success">Current Bid:</span> No Bids.</li>
+            {% endif %}
           </ul>
           <div class="card-body">
-            <a href="{% url 'category' listing.category %}" class="card-link">View "{{ listing.category }}" listings</a>
+            <a href="{% url 'category' listing.category %}" class="card-link">View listings in "{{ listing.category }}" category</a>
           </div>
-          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+          <p class="card-text"><small class="text-muted">Date posted: {{ listing.datetime }}</small></p>
         </div>
       </div>
     </div>
@@ -28,8 +34,13 @@
         {% if listing.seller != bidder %}
             <form action="{% url 'listing' listing.id %}" method="post">
                 {% csrf_token %}
-                {{ form }}
-            <input type="submit" name="form" >
+                {{ bid_action }}
+            <input type="submit" name="bid" >
+            </form>
+            <form action="{% url 'listing' listing.id %}" method="post">
+                {% csrf_token %}
+                {{ comment_action }}
+            <input type="submit" name="comment_action">
             </form>
             {% if watchlist == False %}
                 <form action="{% url 'listing' listing.id %}" method="post">
@@ -71,8 +82,18 @@
         <h2>Comments:</h2>
         <br>
             {% for comment in comments %}
-            <li> {{ comment }}</li>
+            <div class="card" style="width: 40rem;">
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item"><b>{{ comment.commenter }}: </b>{{ comment.comment }}</li>
+                </ul>
+            </div>
             {% endfor %}
         {% endif %}
     </div>
 {% endblock %}
+
+<div class="card" style="width: rem;">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">{{ comment }}</li>
+    </ul>
+</div>

@@ -11,19 +11,26 @@
     <a href="{% url 'category' 'Booka' %}" class="list-group-item list-group-item-action">Books</a>
     <a href="{% url 'category' 'Music' %}" class="list-group-item list-group-item-action">Music</a>
     <a href="{% url 'category' 'Other' %}" class="list-group-item list-group-item-action">Other</a>
-  </div>
+</div>
     <br>
     <div class="row row-cols-1 row-cols-md-3">
     {% for listing in listings %}
         {% if listing.active %}
             <div class="col mb-4">
               <div class="card">
-                <div class="card-body">
-                <h5 class="card-title">{{ listing.title }}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Current Price: ${{ listing.current_bid }}</h6>
-                <p class="card-text">{{ listing.description }}</p>
-                <a href="{% url 'listing' listing.id %}" class="card-link">View Listing</a>
-                </div>
+                {% if listing.img %}
+                    <img src="{{ listing.img.url }}" class="card-img-top">
+                {% endif %}
+                    <div class="card-body">
+                    <h5 class="card-title">{{ listing.title }}</h5>
+                    {% if listing.current_bid != None %}
+                        <h6 class="card-subtitle mb-2 text-muted">Current Price: ${{ listing.current_bid }}</h6>
+                    {% else %}
+                        <h6 class="card-subtitle mb-2 text-muted">Starting Price: ${{ listing.starting_price }}</h6>
+                    {% endif %}
+                    <p class="card-text">{{ listing.description }}</p>
+                    <a href="{% url 'listing' listing.id %}" class="card-link">View Listing</a>
+                    </div>
               </div>
             </div>
         {% endif %}

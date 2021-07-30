@@ -3,7 +3,7 @@
 {% block body %}
     <h2>Create Listing:</h2>
     <br>
-    <form class="form-group" action= "{% url 'create' %}" method="post">
+    <form class="form-group" action= "{% url 'create' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form|linebreaks }}
     <input type="submit">

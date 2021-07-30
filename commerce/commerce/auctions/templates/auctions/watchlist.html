@@ -1,11 +1,32 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Watchlist</h2>
-    {% for listing in watchlist %}
-        <li><a href="{% url 'listing' listing.item.id %}">{{ listing }}</a></li>
-    {% empty %}
-        <li>No Listings.</li>
-    {% endfor %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for listing in watchlist %}
+            <div class="col">
+                <div class="card">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                    <h5 class="card-title">{{ listing.item.title }}</h5>
+                    <p class="card-text">{{ listing.item.description }}</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><span class="badge bg-primary">Seller:</span> {{ listing.item.seller }}</li>
+                        {% if listing.item.current_bid == None %}
+                            <li class="list-group-item"><span class="badge bg-success">Current Bid:</span>No bids.</li>
+                        {% else %}
+                            <li class="list-group-item"><span class="badge bg-success">Current Bid:</span> ${{ listing.item.current_bid }}</li>  
+                        {% endif %}
+                    </ul>
+                    <div class="card-body">
+                        <a href= "{% url 'listing' listing.item.id %}" class="card-link">View Listing</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <li>No listings.</li>
+        {% endfor %}
+    </div>
 {% endblock %}
-    
+      
+      

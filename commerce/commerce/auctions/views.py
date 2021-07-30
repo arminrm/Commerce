@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from .models import *
 from django import forms
+from datetime import datetime
 
 CATEGORIES = [
     ('Technology', 'Technology'),
@@ -23,10 +24,13 @@ class CreateNewListing(forms.Form):
     title = forms.CharField(max_length=67)
     description = forms.CharField(max_length=67)
     category = forms.ChoiceField(choices=CATEGORIES)
-    price = forms.IntegerField(min_value=0)
+    starting_price = forms.IntegerField(min_value=0)
+    image = forms.ImageField()
 
-class ActionOnListing(forms.Form):
+class BidOnListing(forms.Form):
     place_bid = forms.IntegerField(min_value=0, required=False)
+
+class CommentOnListing(forms.Form):
     comment = forms.CharField(max_length=67, required=False)
 
 def index(request):
@@ -40,8 +44,10 @@ def create(request):
 
     if request.method == "POST":
         form = CreateNewListing(request.POST)
+        time_created = str(datetime.now())
         if form.is_valid():
-            Listing(seller= seller, title= form.cleaned_data["title"], description= form.cleaned_data["description"], category=form.cleaned_data["category"], current_bid= form.cleaned_data["price"]).save()
+            print("here")
+            Listing(seller= seller, title= form.cleaned_data["title"], description= form.cleaned_data["description"], category=form.cleaned_data["category"], starting_price= form.cleaned_data["starting_price"], datetime= time_created, img=form.cleaned_data["image"]).save()
             return HttpResponseRedirect(reverse('index'))
         else:
             return render(request, "auctions/create.html", {
@@ -64,34 +70,66 @@ def listing(request, listing_id):
 
     if request.method == "POST":  # you could do this more efficiently using tags on forms...
         if bidder != listing.seller:
-            if "form" in request.POST: #create sep class for bid and listing
-                action = ActionOnListing(request.POST) 
+            if "bid" in request.POST: #create sep class for bid and listing
+                action = BidOnListing(request.POST) 
                 if action.is_valid():
-                    if action.cleaned_data["place_bid"] != None and action.cleaned_data["place_bid"] > listing.current_bid:
+                    if listing.current_bid != None and action.cleaned_data["place_bid"] > listing.current_bid:
                         listing.current_bid = action.cleaned_data["place_bid"]
                         listing.save()
                         Bid(bidder= bidder, item= listing, bid= action.cleaned_data["place_bid"] ).save()
-                    elif action.cleaned_data["place_bid"] != None and action.cleaned_data["place_bid"] <= listing.current_bid:
+                        if watch_list != True:
+                            Watchlist(watcher= bidder, item=listing).save()
+                    elif listing.current_bid != None and action.cleaned_data["place_bid"] <= listing.current_bid:
                         return render(request, "auctions/listing.html", {
                             "listing": listing,
-                            "form": action,
+                            "bid_action": action,
+                            "comment_action": CommentOnListing(),
                             "message": "Bid must be higher than current price.", 
                             "comments": comments,
                             "bidder": bidder,
                             "watchlist": watch_list
                         })
-
-                    if action.cleaned_data["comment"] != "":
-                        Comment(commenter= bidder, item= listing, comment= action.cleaned_data["comment"]).save()
-
+                    elif listing.current_bid == None:
+                        if action.cleaned_data["place_bid"] > listing.starting_price:
+                            listing.current_bid = action.cleaned_data["place_bid"]
+                            listing.save()
+                            Bid(bidder= bidder, item= listing, bid= action.cleaned_data["place_bid"] ).save() 
+                        else:
+                            return render(request, "auctions/listing.html", {
+                                "listing": listing,
+                                "bid_action": action,
+                                "comment_action": CommentOnListing(),
+                                "message": "Bid must be higher than current price.", 
+                                "comments": comments,
+                                "bidder": bidder,
+                                "watchlist": watch_list
+                            })
                 else:
                     return render(request, "auctions/listing.html", {
                         "listing": listing,
-                        "form": action, 
+                        "bid_action": action, 
+                        "comment_action": CommentOnListing(),
                         "comments": comments,
                         "bidder": bidder,
                         "watchlist": watch_list
                     })
+
+            elif "comment_action" in request.POST:
+                action = CommentOnListing(request.POST)
+
+                if action.is_valid():
+                    print(action.cleaned_data["comment"])
+                    Comment(commenter= bidder, item= listing, comment= action.cleaned_data["comment"]).save()
+                else:
+                    return render(request, "auctions/listing.html", {
+                        "listing": listing,
+                        "bid_action": BidOnListing(),
+                        "comment_action": action, 
+                        "comments": comments,
+                        "bidder": bidder,
+                        "watchlist": watch_list
+                    })
+
 
             elif "watchlist" in request.POST:
                 if watch_list == False:
@@ -109,7 +147,8 @@ def listing(request, listing_id):
 
     return render(request, "auctions/listing.html", {
         "listing": listing,
-        "form": ActionOnListing(),
+        "bid_action": BidOnListing(),
+        "comment_action": CommentOnListing(),
         "comments": comments,
         "bidder": bidder, 
         "exists": Bid.objects.filter(item= listing).exists(),

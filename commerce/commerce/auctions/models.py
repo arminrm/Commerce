@@ -5,12 +5,15 @@ class User(AbstractUser, models.Model):
     pass
 
 class Listing(models.Model):
-    seller = models.ForeignKey(User, on_delete=models.CASCADE, null=True) #why?
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=69)
     description = models.CharField(max_length=69)
-    current_bid = models.IntegerField()
+    starting_price = models.IntegerField(null=True)
+    current_bid = models.IntegerField(null=True)
     category = models.CharField(max_length=69, null=True)
     active = models.BooleanField(default=True)
+    datetime = models.CharField(max_length=69, null=True)
+    img = models.ImageField(null=True, upload_to="images/")
 
     def __str__(self):
         return f"{self.id} - {self.seller}: {self.title} is ${self.current_bid}"
