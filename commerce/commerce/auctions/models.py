@@ -13,7 +13,7 @@ class Listing(models.Model):
     active = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.id}, {self.seller}: {self.title} is ${self.current_bid}"
+        return f"{self.id} - {self.seller}: {self.title} is ${self.current_bid}"
 
 class Bid(models.Model):   #should I allow it to inherit
     bidder = models.ForeignKey(User, on_delete=models.CASCADE)

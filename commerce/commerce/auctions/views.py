@@ -5,12 +5,13 @@ from django.forms.forms import Form
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils.safestring import mark_safe
 from .models import *
 from django import forms
 
 CATEGORIES = [
-    ('FASHION', 'Fashion'),
     ('TECHNOLOGY', 'Technology'),
+    ('FASHION', 'Fashion'),
     ('SPORTS', 'Sports'),
     ('TOYS', 'Toys'),
     ('BOOKS', 'Books'),
@@ -22,10 +23,10 @@ class CreateNewListing(forms.Form):
     title = forms.CharField(max_length=67)
     description = forms.CharField(max_length=67)
     category = forms.ChoiceField(choices=CATEGORIES)
-    price = forms.IntegerField()
+    price = forms.IntegerField(min_value=0)
 
 class ActionOnListing(forms.Form):
-    place_bid = forms.IntegerField(required=False)
+    place_bid = forms.IntegerField(min_value=0, required=False)
     comment = forms.CharField(max_length=67, required=False)
 
 def index(request):
@@ -120,6 +121,18 @@ def watchlist(request):
     watch_list = Watchlist.objects.filter(watcher= User.objects.get(id= request.session["user"]))
     return render(request, "auctions/watchlist.html", {
         "watchlist": watch_list
+    })
+
+def categories(request):
+    return render(request, "auctions/categories.html", {
+        "categories": CATEGORIES
+    })
+
+def category(request, category):
+    return render(request, "auctions/category.html", {
+        "listings": Listing.objects.filter(category=category),
+        "category": category,
+        "categories": CATEGORIES
     })
 
 def login_view(request):
