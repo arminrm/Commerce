@@ -61,15 +61,16 @@ def listing(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     bidder = User.objects.get(id= request.session['user'])
     watch_list = Watchlist.objects.filter(watcher= bidder, item= listing).exists()
+    print(watch_list)
 
-    if Comment.objects.filter(item= listing).exists():   #cut this down, use query set for input
+    if Comment.objects.filter(item= listing).exists():   
         comments = Comment.objects.filter(item= listing)
     else:
         comments = False
 
     if request.method == "POST":  # you could do this more efficiently using tags on forms...
         if bidder != listing.seller:
-            if "bid" in request.POST: #create sep class for bid and listing
+            if "bid" in request.POST: 
                 action = BidOnListing(request.POST) 
                 if action.is_valid():
                     if listing.current_bid != None and action.cleaned_data["place_bid"] > listing.current_bid:
@@ -92,7 +93,9 @@ def listing(request, listing_id):
                         if action.cleaned_data["place_bid"] > listing.starting_price:
                             listing.current_bid = action.cleaned_data["place_bid"]
                             listing.save()
-                            Bid(bidder= bidder, item= listing, bid= action.cleaned_data["place_bid"] ).save() 
+                            Bid(bidder= bidder, item= listing, bid= action.cleaned_data["place_bid"] ).save()
+                            if watch_list != True:
+                                Watchlist(watcher= bidder, item=listing).save() 
                         else:
                             return render(request, "auctions/listing.html", {
                                 "listing": listing,
@@ -117,7 +120,6 @@ def listing(request, listing_id):
                 action = CommentOnListing(request.POST)
 
                 if action.is_valid():
-                    print(action.cleaned_data["comment"])
                     Comment(commenter= bidder, item= listing, comment= action.cleaned_data["comment"]).save()
                 else:
                     return render(request, "auctions/listing.html", {
