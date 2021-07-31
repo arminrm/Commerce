@@ -9,7 +9,7 @@ class Listing(models.Model):
     title = models.CharField(max_length=69)
     description = models.CharField(max_length=69)
     starting_price = models.IntegerField(null=True)
-    current_bid = models.IntegerField(null=True)
+    current_bid = models.IntegerField(null=True, blank=True)
     category = models.CharField(max_length=69, null=True)
     active = models.BooleanField(default=True)
     datetime = models.CharField(max_length=69, null=True)

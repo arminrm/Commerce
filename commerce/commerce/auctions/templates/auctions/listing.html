@@ -1,8 +1,8 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-  <div class="card mb-3" style="max-width: 540px;">
-    <div class="row g-0">
+  <div class="card mb-3" style="max-width: 1250px;">
+    <div class="row g-0"> 
       <div class="col-md-4">
         {% if listing.img.url %}
             <img src="{{ listing.img.url }}" class="img-fluid rounded-start">
@@ -91,9 +91,3 @@
         {% endif %}
     </div>
 {% endblock %}
-
-<div class="card" style="width: rem;">
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">{{ comment }}</li>
-    </ul>
-</div>

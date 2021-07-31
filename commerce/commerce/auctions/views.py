@@ -43,10 +43,9 @@ def create(request):
     seller = User.objects.get(id= request.session['user'])
 
     if request.method == "POST":
-        form = CreateNewListing(request.POST)
+        form = CreateNewListing(request.POST, request.FILES)
         time_created = str(datetime.now())
         if form.is_valid():
-            print("here")
             Listing(seller= seller, title= form.cleaned_data["title"], description= form.cleaned_data["description"], category=form.cleaned_data["category"], starting_price= form.cleaned_data["starting_price"], datetime= time_created, img=form.cleaned_data["image"]).save()
             return HttpResponseRedirect(reverse('index'))
         else:
