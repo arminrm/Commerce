@@ -61,7 +61,6 @@ def listing(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     bidder = User.objects.get(id= request.session['user'])
     watch_list = Watchlist.objects.filter(watcher= bidder, item= listing).exists()
-    print(watch_list)
 
     if Comment.objects.filter(item= listing).exists():   
         comments = Comment.objects.filter(item= listing)
