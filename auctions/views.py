@@ -35,7 +35,7 @@ class CommentOnListing(forms.Form):
 
 def index(request):
     return render(request, "auctions/index.html", {
-        "listings": Listing.objects.all()
+        "listings": reversed(Listing.objects.all().reverse())
     })
 
 def create(request):
@@ -157,7 +157,7 @@ def listing(request, listing_id):
     })
 
 def watchlist(request):
-    watch_list = Watchlist.objects.filter(watcher= User.objects.get(id= request.session["user"]))
+    watch_list = reversed(Watchlist.objects.filter(watcher= User.objects.get(id= request.session["user"])))
     return render(request, "auctions/watchlist.html", {
         "watchlist": watch_list
     })
@@ -169,7 +169,7 @@ def categories(request):
 
 def category(request, category):
     return render(request, "auctions/category.html", {
-        "listings": Listing.objects.filter(category=category),
+        "listings": reversed(Listing.objects.filter(category=category)),
         "category": category,
         "categories": CATEGORIES
     })
