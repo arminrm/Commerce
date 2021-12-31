@@ -13,7 +13,7 @@ class Listing(models.Model):
     category = models.CharField(max_length=69, null=True)
     active = models.BooleanField(default=True)
     datetime = models.CharField(max_length=69, null=True)
-    img = models.ImageField(null=True, upload_to="images/")
+    img = models.URLField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return f"{self.id} - {self.seller}: {self.title} is ${self.current_bid}"

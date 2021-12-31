@@ -25,7 +25,7 @@ class CreateNewListing(forms.Form):
     description = forms.CharField(max_length=67)
     category = forms.ChoiceField(choices=CATEGORIES)
     starting_price = forms.IntegerField(min_value=0)
-    image = forms.ImageField()
+    image = forms.URLField(required=False)
 
 class BidOnListing(forms.Form):
     place_bid = forms.IntegerField(min_value=0, required=False)
