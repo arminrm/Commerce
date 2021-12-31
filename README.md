@@ -5,7 +5,8 @@ Full stack e-commerce auction web app allowing users to post, place bids and com
 <img src="https://img.shields.io/badge/-Python-blue" />  <img src="https://img.shields.io/badge/-Django-green" /> <img src="https://img.shields.io/badge/-PostgreSQL-lightgrey" /> 
 <img src="https://img.shields.io/badge/-HTML5-orange" /> 
 
-![Screenshot (481)](https://user-images.githubusercontent.com/68967290/147423381-4760bfd6-70e3-475d-9cf4-468952339395.png)
-
 ## Link: 
 https://modern-bazaar.herokuapp.com/
+
+![Screenshot (481)](https://user-images.githubusercontent.com/68967290/147423381-4760bfd6-70e3-475d-9cf4-468952339395.png)
+
