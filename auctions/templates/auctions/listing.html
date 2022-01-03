@@ -35,27 +35,42 @@
             <form action="{% url 'listing' listing.id %}" method="post">
                 {% csrf_token %}
                 {{ bid_action }}
-            <input type="submit" name="bid" >
+            <input id= "bid" type="submit" name="bid" >
             </form>
             <form action="{% url 'listing' listing.id %}" method="post">
                 {% csrf_token %}
                 {{ comment_action }}
             <input type="submit" name="comment_action">
             </form>
+            <script>
+                function added_watchlist(){
+
+                    confirm("Listing has been added to watchlist, alongside placed bids.");
+                }
+
+                function removed_watchlist(){
+
+                    confirm("Listing has been removed from watchlist.");
+                }
+            </script>
             {% if watchlist == False %}
                 <form action="{% url 'listing' listing.id %}" method="post">
                     {% csrf_token %}
                     <br>
-                    <input type="submit" value="Add to Watchlist" name="watchlist">
+                    <input onclick="added_watchlist()" type="submit" value="Add to Watchlist" name="watchlist">
                 </form>
             {% else %}
                 <form action="{% url 'listing' listing.id %}" method="post">
                     {% csrf_token %}
                     <br>
-                    <input type="submit" value="Remove from Watchlist" name="remove-watchlist">
+                    <input onclick= "removed_watchlist()" type="submit" value="Remove from Watchlist" name="remove-watchlist">
                 </form>
             {% endif %}
-            <div>{{ message }}</div>
+            {% if message == True %}
+                <script>
+                    confirm("Bid must be higher than current price.");
+                </script>
+            {% endif %}
         {% else %}
             <form action="{% url 'listing' listing.id %}" method="post">
                 {% csrf_token %}
@@ -68,8 +83,14 @@
             {% for bid in bids %}
                 {% if bid.bidder == bidder %}
                     <h2>You won the auction!</h2>
+                    <script>
+                        confirm("You won the auction!");
+                    </script>
                 {% else %}
                     <h2>Auction Closed.</h2>
+                    <script>
+                        confirm("This auction has been closed.");
+                    </script>
                 {% endif %}
             {% endfor %}
         {% else %}

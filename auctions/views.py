@@ -83,7 +83,7 @@ def listing(request, listing_id):
                             "listing": listing,
                             "bid_action": action,
                             "comment_action": CommentOnListing(),
-                            "message": "Bid must be higher than current price.", 
+                            "message": True, 
                             "comments": comments,
                             "bidder": bidder,
                             "watchlist": watch_list
@@ -100,7 +100,7 @@ def listing(request, listing_id):
                                 "listing": listing,
                                 "bid_action": action,
                                 "comment_action": CommentOnListing(),
-                                "message": "Bid must be higher than current price.", 
+                                "message": True, 
                                 "comments": comments,
                                 "bidder": bidder,
                                 "watchlist": watch_list
