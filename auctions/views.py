@@ -25,7 +25,7 @@ class CreateNewListing(forms.Form):
     description = forms.CharField(max_length=67)
     category = forms.ChoiceField(choices=CATEGORIES)
     starting_price = forms.IntegerField(min_value=0)
-    image = forms.URLField(required=False)
+    image_URL = forms.URLField(label= "Image URL", required=False)
 
 class BidOnListing(forms.Form):
     place_bid = forms.IntegerField(min_value=0, required=False)
@@ -46,7 +46,7 @@ def create(request):
         form = CreateNewListing(request.POST, request.FILES)
         time_created = str(datetime.now())
         if form.is_valid():
-            Listing(seller= seller, title= form.cleaned_data["title"], description= form.cleaned_data["description"], category=form.cleaned_data["category"], starting_price= form.cleaned_data["starting_price"], datetime= time_created, img=form.cleaned_data["image"]).save()
+            Listing(seller= seller, title= form.cleaned_data["title"], description= form.cleaned_data["description"], category=form.cleaned_data["category"], starting_price= form.cleaned_data["starting_price"], datetime= time_created, img=form.cleaned_data["image_URL"]).save()
             return HttpResponseRedirect(reverse('index'))
         else:
             return render(request, "auctions/create.html", {
